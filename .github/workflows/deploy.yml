@@ -25,11 +25,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
+      # IMPORTANT: без lock-файла используем npm install
       - name: Install
-        run: npm ci
+        run: npm install
 
+      # IMPORTANT: base path для Vite под GitHub Pages
       - name: Build
         env:
           VITE_BASE: /${{ github.event.repository.name }}/
