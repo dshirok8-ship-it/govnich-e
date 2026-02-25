@@ -1,0 +1,4 @@
+[
+  { "id": "uk_nevsky_home", "name": "Невский Хоум (демо)", "site": "https://example.com/nevsky" },
+  { "id": "spb_rent_mgmt", "name": "SPB Rent Mgmt (демо)", "site": "https://example.com/spb-rent" }
+]

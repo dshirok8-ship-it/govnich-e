@@ -1,0 +1,18 @@
+export default function Legend() {
+  return (
+    <div className="legend">
+      <div className="legend__row">
+        <span className="legend__swatch swatch-default" />
+        <span>зона</span>
+      </div>
+      <div className="legend__row">
+        <span className="legend__swatch swatch-covered" />
+        <span>покрыта выбранной УК</span>
+      </div>
+      <div className="legend__row">
+        <span className="legend__swatch swatch-active" />
+        <span>активная зона</span>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 560">
+  <rect x="0" y="0" width="820" height="560" fill="transparent" />
+
+  <!-- Districts -->
+  <g id="districts">
+    <path data-zone-id="district_01" d="M40 60 L360 60 L360 260 L40 260 Z" />
+    <path data-zone-id="district_02" d="M420 80 L780 80 L780 300 L420 300 Z" />
+  </g>
+
+  <!-- MO polygons -->
+  <g id="mos">
+    <!-- within district_01 -->
+    <path data-zone-id="mo_001" d="M60 90 L190 90 L190 230 L60 230 Z" />
+    <path data-zone-id="mo_002" d="M210 90 L340 90 L340 230 L210 230 Z" />
+
+    <!-- within district_02 -->
+    <path data-zone-id="mo_003" d="M450 110 L750 110 L750 270 L450 270 Z" />
+  </g>
+
+  <!-- Labels (not interactive) -->
+  <g font-family="Arial" font-size="14" fill="#9ca3af">
+    <text x="50" y="55">district_01</text>
+    <text x="430" y="75">district_02</text>
+
+    <text x="70" y="85">mo_001</text>
+    <text x="220" y="85">mo_002</text>
+    <text x="460" y="105">mo_003</text>
+  </g>
+</svg>

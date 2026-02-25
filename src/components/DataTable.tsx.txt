@@ -1,0 +1,49 @@
+import React from 'react';
+
+type Column<T> = {
+  key: string;
+  header: string;
+  render: (row: T) => React.ReactNode;
+  width?: string;
+};
+
+type Props<T> = {
+  rows: T[];
+  columns: Column<T>[];
+  emptyText?: string;
+};
+
+export default function DataTable<T>({ rows, columns, emptyText = 'Пусто' }: Props<T>) {
+  return (
+    <div className="table">
+      <table>
+        <thead>
+          <tr>
+            {columns.map((c) => (
+              <th key={c.key} style={c.width ? { width: c.width } : undefined}>
+                {c.header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.length === 0 ? (
+            <tr>
+              <td colSpan={columns.length} className="muted">
+                {emptyText}
+              </td>
+            </tr>
+          ) : (
+            rows.map((r, idx) => (
+              <tr key={idx}>
+                {columns.map((c) => (
+                  <td key={c.key}>{c.render(r)}</td>
+                ))}
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}

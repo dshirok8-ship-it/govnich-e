@@ -1,0 +1,26 @@
+import React from 'react';
+
+export type TabItem = { id: string; label: string };
+
+type Props = {
+  items: TabItem[];
+  activeId: string;
+  onChange: (id: string) => void;
+};
+
+export default function Tabs({ items, activeId, onChange }: Props) {
+  return (
+    <div className="tabs">
+      {items.map((t) => (
+        <button
+          key={t.id}
+          className={`tab ${t.id === activeId ? 'is-active' : ''}`}
+          onClick={() => onChange(t.id)}
+          type="button"
+        >
+          {t.label}
+        </button>
+      ))}
+    </div>
+  );
+}

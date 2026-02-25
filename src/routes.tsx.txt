@@ -1,0 +1,13 @@
+import { Routes, Route, Navigate } from 'react-router-dom';
+import MapPage from './pages/MapPage';
+import AdminPage from './pages/AdminPage';
+
+export default function RoutesView() {
+  return (
+    <Routes>
+      <Route path="/" element={<MapPage />} />
+      <Route path="/admin" element={<AdminPage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+}

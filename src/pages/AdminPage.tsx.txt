@@ -1,0 +1,269 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import Tabs from '../components/Tabs';
+import DataTable from '../components/DataTable';
+import { loadData, type Company, type Coverage, type Zone } from '../lib/dataLoader';
+import { parseCoverageCsv } from '../lib/csvImport';
+import { normalizeCoverage } from '../lib/normalizers';
+import { downloadJson } from '../lib/download';
+import { validateCompanies, validateCoverage, validateZones, type ValidationIssue } from '../lib/validators';
+
+type ImportState = {
+  rawText: string;
+  parsed: Coverage[];
+  parseErrors: string[];
+  applied: boolean;
+};
+
+export default function AdminPage() {
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  const [zones, setZones] = useState<Zone[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [coverage, setCoverage] = useState<Coverage[]>([]);
+
+  const [tab, setTab] = useState('import');
+
+  const [importState, setImportState] = useState<ImportState>({
+    rawText: '',
+    parsed: [],
+    parseErrors: [],
+    applied: false
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setLoadError(null);
+
+    loadData()
+      .then((d) => {
+        if (cancelled) return;
+        setZones(d.zones);
+        setCompanies(d.companies);
+        setCoverage(d.coverage);
+      })
+      .catch((e) => {
+        if (cancelled) return;
+        setLoadError(e instanceof Error ? e.message : 'Ошибка загрузки данных');
+      })
+      .finally(() => {
+        if (cancelled) return;
+        setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const issues: ValidationIssue[] = useMemo(() => {
+    return [
+      ...validateZones(zones),
+      ...validateCompanies(companies),
+      ...validateCoverage(coverage, companies, zones)
+    ];
+  }, [zones, companies, coverage]);
+
+  const issueSummary = useMemo(() => {
+    const errors = issues.filter((i) => i.level === 'error').length;
+    const warns = issues.filter((i) => i.level === 'warn').length;
+    return { errors, warns };
+  }, [issues]);
+
+  function onPickCsvFile(file: File | null) {
+    if (!file) return;
+    file.text().then((text) => {
+      const parsed = parseCoverageCsv(text);
+      const normalized = normalizeCoverage(parsed.rows);
+
+      setImportState({
+        rawText: text,
+        parsed: normalized,
+        parseErrors: parsed.errors,
+        applied: false
+      });
+
+      setTab('import');
+    });
+  }
+
+  function applyImportedCoverage() {
+    setCoverage(importState.parsed);
+    setImportState((s) => ({ ...s, applied: true }));
+  }
+
+  if (loading) return <div className="muted">Загрузка…</div>;
+  if (loadError) return <div className="errorBox">Ошибка: {loadError}</div>;
+
+  return (
+    <div className="admin">
+      <div className="adminHeader">
+        <div>
+          <h2 className="h2">Админ</h2>
+          <div className="muted">
+            Данные читаются из <code>/public/data</code>. Здесь мы импортируем и скачиваем JSON-файлы для коммита в репозиторий.
+          </div>
+        </div>
+
+        <div className="adminHeader__right">
+          <div className={`pill ${issueSummary.errors ? 'pill--bad' : issueSummary.warns ? 'pill--warn' : 'pill--ok'}`}>
+            Валидатор: ошибок {issueSummary.errors}, предупреждений {issueSummary.warns}
+          </div>
+        </div>
+      </div>
+
+      <Tabs
+        items={[
+          { id: 'import', label: 'Import' },
+          { id: 'coverage', label: 'Coverage' },
+          { id: 'companies', label: 'Companies' },
+          { id: 'zones', label: 'Zones' },
+          { id: 'validator', label: 'Validator' }
+        ]}
+        activeId={tab}
+        onChange={setTab}
+      />
+
+      {tab === 'import' ? (
+        <section className="card">
+          <h3 className="card__title">Импорт coverage из CSV</h3>
+          <div className="muted">Формат CSV: заголовки <code>companyId,zoneId</code></div>
+
+          <div style={{ marginTop: 12, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+            <input
+              type="file"
+              accept=".csv,text/csv"
+              onChange={(e) => onPickCsvFile(e.target.files?.[0] ?? null)}
+            />
+            <button className="btn" type="button" onClick={applyImportedCoverage} disabled={!importState.parsed.length}>
+              Применить в состоянии
+            </button>
+            <button className="btn btn--ghost" type="button" onClick={() => downloadJson('coverage.json', coverage)}>
+              Скачать coverage.json (текущее)
+            </button>
+          </div>
+
+          {importState.parseErrors.length ? (
+            <div className="errorBox" style={{ marginTop: 12 }}>
+              <div style={{ fontWeight: 600 }}>Ошибки парсинга:</div>
+              <ul className="list">
+                {importState.parseErrors.map((e, idx) => (
+                  <li key={idx} className="list__item">{e}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          <div style={{ marginTop: 12 }}>
+            <div className="muted">
+              Preview импортированных строк: <strong>{importState.parsed.length}</strong>
+              {importState.applied ? <span className="badge" style={{ marginLeft: 8 }}>применено</span> : null}
+            </div>
+
+            <DataTable
+              rows={importState.parsed.slice(0, 200)}
+              columns={[
+                { key: 'companyId', header: 'companyId', render: (r: Coverage) => <code>{r.companyId}</code> },
+                { key: 'zoneId', header: 'zoneId', render: (r: Coverage) => <code>{r.zoneId}</code> }
+              ]}
+              emptyText="Загрузи CSV, чтобы увидеть preview"
+            />
+            {importState.parsed.length > 200 ? <div className="muted">Показаны первые 200 строк.</div> : null}
+          </div>
+        </section>
+      ) : null}
+
+      {tab === 'coverage' ? (
+        <section className="card">
+          <h3 className="card__title">Coverage (в памяти)</h3>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 8 }}>
+            <button className="btn btn--ghost" type="button" onClick={() => downloadJson('coverage.json', coverage)}>
+              Скачать coverage.json
+            </button>
+          </div>
+
+          <DataTable
+            rows={coverage}
+            columns={[
+              { key: 'companyId', header: 'companyId', render: (r: Coverage) => <code>{r.companyId}</code>, width: '220px' },
+              { key: 'zoneId', header: 'zoneId', render: (r: Coverage) => <code>{r.zoneId}</code>, width: '220px' }
+            ]}
+          />
+        </section>
+      ) : null}
+
+      {tab === 'companies' ? (
+        <section className="card">
+          <h3 className="card__title">Companies</h3>
+          <button className="btn btn--ghost" type="button" onClick={() => downloadJson('companies.json', companies)}>
+            Скачать companies.json
+          </button>
+          <DataTable
+            rows={companies}
+            columns={[
+              { key: 'id', header: 'id', render: (r: Company) => <code>{r.id}</code>, width: '220px' },
+              { key: 'name', header: 'name', render: (r: Company) => r.name },
+              {
+                key: 'site',
+                header: 'site',
+                render: (r: Company) =>
+                  r.site ? (
+                    <a href={r.site} target="_blank" rel="noreferrer">
+                      {r.site}
+                    </a>
+                  ) : (
+                    <span className="muted">—</span>
+                  )
+              }
+            ]}
+          />
+        </section>
+      ) : null}
+
+      {tab === 'zones' ? (
+        <section className="card">
+          <h3 className="card__title">Zones</h3>
+          <button className="btn btn--ghost" type="button" onClick={() => downloadJson('zones.json', zones)}>
+            Скачать zones.json
+          </button>
+          <DataTable
+            rows={zones}
+            columns={[
+              { key: 'id', header: 'id', render: (r: Zone) => <code>{r.id}</code>, width: '220px' },
+              { key: 'type', header: 'type', render: (r: Zone) => r.type, width: '120px' },
+              { key: 'name', header: 'name', render: (r: Zone) => r.name },
+              {
+                key: 'parent',
+                header: 'parentDistrictId',
+                render: (r: Zone) => (r.parentDistrictId ? <code>{r.parentDistrictId}</code> : <span className="muted">null</span>)
+              }
+            ]}
+          />
+        </section>
+      ) : null}
+
+      {tab === 'validator' ? (
+        <section className="card">
+          <h3 className="card__title">Validator</h3>
+          <div className="muted">Проверки: неизвестные ID, дубли coverage-пар, пустые ссылки, подозрительные URL, структура зон.</div>
+
+          <DataTable
+            rows={issues}
+            columns={[
+              {
+                key: 'level',
+                header: 'level',
+                render: (r: any) => <span className={`pill ${r.level === 'error' ? 'pill--bad' : 'pill--warn'}`}>{r.level}</span>,
+                width: '120px'
+              },
+              { key: 'code', header: 'code', render: (r: any) => <code>{r.code}</code>, width: '260px' },
+              { key: 'message', header: 'message', render: (r: any) => r.message }
+            ]}
+            emptyText="Пока всё чисто 🎯"
+          />
+        </section>
+      ) : null}
+    </div>
+  );
+}

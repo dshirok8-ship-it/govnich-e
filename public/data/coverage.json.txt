@@ -1,0 +1,5 @@
+[
+  { "companyId": "uk_nevsky_home", "zoneId": "district_01" },
+  { "companyId": "uk_nevsky_home", "zoneId": "mo_001" },
+  { "companyId": "spb_rent_mgmt", "zoneId": "mo_003" }
+]
