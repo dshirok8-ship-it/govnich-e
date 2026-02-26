@@ -1,4 +1,12 @@
 [
-  { "id": "uk_nevsky_home", "name": "Невский Хоум (демо)", "site": "https://example.com/nevsky" },
-  { "id": "spb_rent_mgmt", "name": "SPB Rent Mgmt (демо)", "site": "https://example.com/spb-rent" }
+  { "id": "uk_alpha", "name": "УК Альфа", "site": "https://example.com/alpha" },
+  { "id": "uk_beta", "name": "УК Бета", "site": "https://example.com/beta" },
+  { "id": "uk_gamma", "name": "УК Гамма", "site": "https://example.com/gamma" },
+  { "id": "uk_delta", "name": "УК Дельта", "site": "https://example.com/delta" },
+  { "id": "uk_epsilon", "name": "УК Эпсилон", "site": "https://example.com/epsilon" },
+  { "id": "uk_zeta", "name": "УК Зета", "site": "https://example.com/zeta" },
+  { "id": "uk_eta", "name": "УК Эта", "site": "https://example.com/eta" },
+  { "id": "uk_theta", "name": "УК Тета", "site": "https://example.com/theta" },
+  { "id": "uk_iota", "name": "УК Иота", "site": "https://example.com/iota" },
+  { "id": "uk_kappa", "name": "УК Каппа", "site": "https://example.com/kappa" }
 ]
