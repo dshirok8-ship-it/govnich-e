@@ -14,6 +14,16 @@ type Props = {
 
 type TooltipState = { visible: boolean; x: number; y: number; zoneId: string | null };
 
+function sortZoneIds(ids: string[]) {
+  // mo_001.. -> по числу; остальное — как есть
+  return [...ids].sort((a, b) => {
+    const am = a.match(/_(\d+)/);
+    const bm = b.match(/_(\d+)/);
+    if (am && bm) return Number(am[1]) - Number(bm[1]);
+    return a.localeCompare(b);
+  });
+}
+
 export default function MapSvg({
   zones,
   coveredZoneIds,
@@ -33,6 +43,8 @@ export default function MapSvg({
     zones.forEach((z) => m.set(z.id, z));
     return m;
   }, [zones]);
+
+  const zoneIdsSorted = useMemo(() => sortZoneIds(zones.map((z) => z.id)), [zones]);
 
   const [tooltip, setTooltip] = useState<TooltipState>({
     visible: false,
@@ -69,7 +81,7 @@ export default function MapSvg({
     };
   }, [onSvgLoaded]);
 
-  // 2) Event delegation (кликаем только по элементам, у которых есть id или data-zone-id)
+  // 2) Event delegation
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -120,24 +132,30 @@ export default function MapSvg({
     };
   }, [onHoverZone, onPickZone]);
 
-  // 3) Apply styles to ALL shapes, not only those with ids
+  // 3) Apply styles + auto-assign zone ids if SVG has none
   useEffect(() => {
     const root = containerRef.current;
     if (!root) return;
 
-    // Берём ВСЕ реальные полигоны карты (mapshaper обычно делает path)
-    const shapes = root.querySelectorAll<HTMLElement>('svg path, svg polygon');
+    const shapes = Array.from(root.querySelectorAll<HTMLElement>('svg path, svg polygon'));
 
+    // проверим: есть ли вообще хоть один id/data-zone-id у фигур
+    const hasAnyIds = shapes.some((n) => n.getAttribute('data-zone-id') || n.getAttribute('id'));
+
+    // если ids нет, но количество фигур совпадает с количеством зон — проставим data-zone-id по порядку
+    if (!hasAnyIds && shapes.length === zoneIdsSorted.length) {
+      shapes.forEach((n, idx) => {
+        n.setAttribute('data-zone-id', zoneIdsSorted[idx]);
+      });
+    }
+
+    // теперь применяем стили/состояния
     shapes.forEach((n) => {
-      // Убираем всё, что mapshaper прописал inline
       n.removeAttribute('fill');
       n.removeAttribute('stroke');
       n.removeAttribute('style');
-
-      // Красим как "зону" всегда, чтобы не было чёрной кляксы
       n.classList.add('zone');
 
-      // А вот интерактивные состояния применяем только если есть понятный id
       const zoneId = n.getAttribute('data-zone-id') || n.getAttribute('id') || '';
       if (!zoneId) return;
 
@@ -153,7 +171,7 @@ export default function MapSvg({
       n.classList.toggle('is-active', activeZoneId === zoneId);
       n.classList.toggle('is-hovered', hoverZoneId === zoneId);
     });
-  }, [coveredZoneIds, activeZoneId, hoverZoneId, districtFilterId, zoneById, svgText]);
+  }, [coveredZoneIds, activeZoneId, hoverZoneId, districtFilterId, zoneById, svgText, zoneIdsSorted]);
 
   const tooltipZone = tooltip.zoneId ? zoneById.get(tooltip.zoneId) : null;
 
@@ -163,7 +181,6 @@ export default function MapSvg({
   return (
     <div className="mapWrap">
       <div ref={containerRef} className="svgContainer" dangerouslySetInnerHTML={{ __html: svgText }} />
-
       {tooltip.visible && tooltipZone ? (
         <div className="tooltip" style={{ left: tooltip.x + 12, top: tooltip.y + 12 }}>
           <div style={{ fontWeight: 600 }}>{tooltipZone.name}</div>
