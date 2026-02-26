@@ -59,6 +59,9 @@ export const Schemas = {
   notes: z.array(NoteSchema)
 };
 
+// ВАЖНО: пути БЕЗ ведущего "/" (GitHub Pages открывает сайт в подпапке /<repo>/)
+const DATA_BASE = 'data';
+
 async function fetchJson<T>(path: string): Promise<T> {
   const res = await fetch(path);
   if (!res.ok) throw new Error(`Не удалось загрузить ${path} (${res.status})`);
@@ -67,11 +70,11 @@ async function fetchJson<T>(path: string): Promise<T> {
 
 export async function loadData() {
   const [zonesRaw, companiesRaw, coverageRaw, notesRaw] = await Promise.all([
-    fetchJson<unknown>('/data/zones.json'),
-    fetchJson<unknown>('/data/companies.json'),
-    fetchJson<unknown>('/data/coverage.json'),
+    fetchJson<unknown>(`${DATA_BASE}/zones.json`),
+    fetchJson<unknown>(`${DATA_BASE}/companies.json`),
+    fetchJson<unknown>(`${DATA_BASE}/coverage.json`),
     // notes опционален
-    fetch('/data/notes.json')
+    fetch(`${DATA_BASE}/notes.json`)
       .then((r) => (r.ok ? r.json() : []))
       .catch(() => [])
   ]);
