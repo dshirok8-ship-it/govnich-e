@@ -46,8 +46,7 @@ export default function MapSvg({
     let cancelled = false;
     setError(null);
 
-    // BASE_URL = "/" локально, и "/<repo>/" на GitHub Pages
-    const base = import.meta.env.BASE_URL;
+    const base = import.meta.env.BASE_URL; // "/" локально, "/<repo>/" на Pages
     const url = `${base}map/spb.svg?v=${Date.now()}`; // cache-bust
 
     fetch(url)
@@ -77,12 +76,18 @@ export default function MapSvg({
 
     function findZoneTarget(target: EventTarget | null): HTMLElement | null {
       if (!(target instanceof HTMLElement)) return null;
-      return (target.closest?.('[data-zone-id]') as HTMLElement | null) ?? null;
+      // поддерживаем и data-zone-id, и id (mapshaper обычно пишет id)
+      return (target.closest?.('[data-zone-id],[id]') as HTMLElement | null) ?? null;
+    }
+
+    function getZoneId(zoneEl: HTMLElement | null): string | null {
+      if (!zoneEl) return null;
+      return zoneEl.getAttribute('data-zone-id') || zoneEl.getAttribute('id');
     }
 
     function onMove(e: MouseEvent) {
       const zoneEl = findZoneTarget(e.target);
-      const zoneId = zoneEl?.getAttribute('data-zone-id');
+      const zoneId = getZoneId(zoneEl);
 
       if (zoneId) {
         onHoverZone(zoneId);
@@ -100,7 +105,7 @@ export default function MapSvg({
 
     function onClick(e: MouseEvent) {
       const zoneEl = findZoneTarget(e.target);
-      const zoneId = zoneEl?.getAttribute('data-zone-id');
+      const zoneId = getZoneId(zoneEl);
       if (!zoneId) return;
       onPickZone(zoneId);
     }
@@ -121,9 +126,14 @@ export default function MapSvg({
     const root = containerRef.current;
     if (!root) return;
 
-    const nodes = root.querySelectorAll<HTMLElement>('[data-zone-id]');
+    const nodes = root.querySelectorAll<HTMLElement>('[data-zone-id],[id]');
     nodes.forEach((n) => {
-      const zoneId = n.getAttribute('data-zone-id') ?? '';
+      const zoneId = n.getAttribute('data-zone-id') || n.getAttribute('id') || '';
+
+      // ШАГ 1: сносим inline-стили, которые делают карту чёрной и ломают CSS подсветку
+      n.removeAttribute('fill');
+      n.removeAttribute('stroke');
+      n.removeAttribute('style');
 
       const z = zoneById.get(zoneId);
       const hidden =
