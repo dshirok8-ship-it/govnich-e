@@ -14,15 +14,6 @@ type Props = {
 
 type TooltipState = { visible: boolean; x: number; y: number; zoneId: string | null };
 
-function sortZoneIds(ids: string[]) {
-  return [...ids].sort((a, b) => {
-    const am = a.match(/_(\d+)/);
-    const bm = b.match(/_(\d+)/);
-    if (am && bm) return Number(am[1]) - Number(bm[1]);
-    return a.localeCompare(b);
-  });
-}
-
 export default function MapSvg({
   zones,
   coveredZoneIds,
@@ -36,9 +27,9 @@ export default function MapSvg({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [svgText, setSvgText] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+  const [debug, setDebug] = useState<string>('debug: …');
 
   const zoneById = useMemo(() => new Map(zones.map((z) => [z.id, z])), [zones]);
-  const zoneIdsSorted = useMemo(() => sortZoneIds(zones.map((z) => z.id)), [zones]);
 
   const [tooltip, setTooltip] = useState<TooltipState>({
     visible: false,
@@ -47,7 +38,7 @@ export default function MapSvg({
     zoneId: null
   });
 
-  // 1) Load SVG as text (BASE_URL for GitHub Pages)
+  // Load SVG
   useEffect(() => {
     let cancelled = false;
     setError(null);
@@ -75,81 +66,67 @@ export default function MapSvg({
     };
   }, [onSvgLoaded]);
 
-  // 2) Event delegation (Element, because SVGElement is not HTMLElement)
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+  function closestZone(el: Element | null): Element | null {
+    if (!el) return null;
+    return el.closest('[data-zone-id],[id]');
+  }
 
-    function findZoneTarget(target: EventTarget | null): Element | null {
-      if (!(target instanceof Element)) return null;
-      return target.closest('[data-zone-id],[id]');
-    }
+  function getZoneId(el: Element | null): string | null {
+    if (!el) return null;
+    return el.getAttribute('data-zone-id') || el.getAttribute('id');
+  }
 
-    function getZoneId(zoneEl: Element | null): string | null {
-      if (!zoneEl) return null;
-      return zoneEl.getAttribute('data-zone-id') || zoneEl.getAttribute('id');
-    }
+  function resolveTarget(e: React.MouseEvent<HTMLDivElement>) {
+    // способ A: e.target
+    const a = e.target instanceof Element ? closestZone(e.target) : null;
 
-    function onMove(e: MouseEvent) {
-      const zoneEl = findZoneTarget(e.target);
-      const zoneId = getZoneId(zoneEl);
+    // способ B: elementFromPoint (если target странный)
+    const bEl = document.elementFromPoint(e.clientX, e.clientY);
+    const b = bEl ? closestZone(bEl) : null;
 
-      if (zoneId) {
-        onHoverZone(zoneId);
-        setTooltip({ visible: true, x: e.clientX, y: e.clientY, zoneId });
-      } else {
-        onHoverZone(null);
-        setTooltip((t) => (t.visible ? { ...t, visible: false, zoneId: null } : t));
-      }
-    }
+    const winner = a || b;
+    const zoneId = getZoneId(winner);
 
-    function onLeave() {
+    const t = winner?.tagName?.toLowerCase() ?? 'none';
+    const id = winner?.getAttribute?.('id') ?? '';
+    const dz = winner?.getAttribute?.('data-zone-id') ?? '';
+    setDebug(`debug: tag=${t} id=${id} data-zone-id=${dz} -> zoneId=${zoneId ?? 'null'}`);
+
+    return { winner, zoneId };
+  }
+
+  function onMove(e: React.MouseEvent<HTMLDivElement>) {
+    const { zoneId } = resolveTarget(e);
+    if (zoneId) {
+      onHoverZone(zoneId);
+      setTooltip({ visible: true, x: e.clientX, y: e.clientY, zoneId });
+    } else {
       onHoverZone(null);
       setTooltip((t) => (t.visible ? { ...t, visible: false, zoneId: null } : t));
     }
+  }
 
-    function onClick(e: MouseEvent) {
-      const zoneEl = findZoneTarget(e.target);
-      const zoneId = getZoneId(zoneEl);
-      if (!zoneId) return;
-      onPickZone(zoneId);
-    }
+  function onLeave() {
+    onHoverZone(null);
+    setTooltip((t) => (t.visible ? { ...t, visible: false, zoneId: null } : t));
+  }
 
-    el.addEventListener('mousemove', onMove);
-    el.addEventListener('mouseleave', onLeave);
-    el.addEventListener('click', onClick);
+  function onClick(e: React.MouseEvent<HTMLDivElement>) {
+    const { zoneId } = resolveTarget(e);
+    if (zoneId) onPickZone(zoneId);
+  }
 
-    return () => {
-      el.removeEventListener('mousemove', onMove);
-      el.removeEventListener('mouseleave', onLeave);
-      el.removeEventListener('click', onClick);
-    };
-  }, [onHoverZone, onPickZone]);
-
-  // 3) Apply styles + auto-assign ids if SVG has none and counts match
+  // Apply styles after render
   useEffect(() => {
     const root = containerRef.current;
     if (!root) return;
 
     const shapes = Array.from(root.querySelectorAll<SVGElement>('svg path, svg polygon'));
-
-    // Make sure SVG receives pointer events
-    const svgRoot = root.querySelector('svg') as SVGElement | null;
-    if (svgRoot) svgRoot.style.pointerEvents = 'auto';
-
-    // If there are no ids at all but counts match, assign data-zone-id by order
-    const hasAnyIds = shapes.some((n) => n.getAttribute('data-zone-id') || n.getAttribute('id'));
-    if (!hasAnyIds && shapes.length === zoneIdsSorted.length) {
-      shapes.forEach((n, idx) => n.setAttribute('data-zone-id', zoneIdsSorted[idx]));
-    }
-
     shapes.forEach((n) => {
-      // Remove export inline styles so CSS .zone controls appearance
       n.removeAttribute('fill');
       n.removeAttribute('stroke');
       n.removeAttribute('style');
       n.style.pointerEvents = 'all';
-
       n.classList.add('zone');
 
       const zoneId = n.getAttribute('data-zone-id') || n.getAttribute('id') || '';
@@ -167,7 +144,12 @@ export default function MapSvg({
       n.classList.toggle('is-active', activeZoneId === zoneId);
       n.classList.toggle('is-hovered', hoverZoneId === zoneId);
     });
-  }, [coveredZoneIds, activeZoneId, hoverZoneId, districtFilterId, zoneById, svgText, zoneIdsSorted]);
+
+    // на всякий случай включим pointer events на svg/группах
+    const svg = root.querySelector('svg') as SVGElement | null;
+    if (svg) svg.style.pointerEvents = 'auto';
+    root.querySelectorAll<SVGElement>('svg g').forEach((g) => (g.style.pointerEvents = 'auto'));
+  }, [coveredZoneIds, activeZoneId, hoverZoneId, districtFilterId, zoneById, svgText]);
 
   const tooltipZone = tooltip.zoneId ? zoneById.get(tooltip.zoneId) : null;
 
@@ -176,7 +158,19 @@ export default function MapSvg({
 
   return (
     <div className="mapWrap">
-      <div ref={containerRef} className="svgContainer" dangerouslySetInnerHTML={{ __html: svgText }} />
+      <div
+        ref={containerRef}
+        className="svgContainer"
+        onMouseMove={onMove}
+        onMouseLeave={onLeave}
+        onClick={onClick}
+        dangerouslySetInnerHTML={{ __html: svgText }}
+      />
+
+      {/* debug плашка */}
+      <div style={{ position: 'absolute', left: 10, top: 10, zIndex: 5, fontSize: 12, color: '#9ca3af' }}>
+        {debug}
+      </div>
 
       {tooltip.visible && tooltipZone ? (
         <div className="tooltip" style={{ left: tooltip.x + 12, top: tooltip.y + 12 }}>
