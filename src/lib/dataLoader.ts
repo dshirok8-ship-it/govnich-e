@@ -59,8 +59,13 @@ export const Schemas = {
   notes: z.array(NoteSchema)
 };
 
-// ВАЖНО: пути БЕЗ ведущего "/" (GitHub Pages открывает сайт в подпапке /<repo>/)
-const DATA_BASE = 'data';
+// BASE_URL = "/" локально, и "/<repo>/" на GitHub Pages
+const BASE = import.meta.env.BASE_URL;
+
+function withBase(path: string) {
+  // path ожидаем без ведущего "/"
+  return `${BASE}${path}`;
+}
 
 async function fetchJson<T>(path: string): Promise<T> {
   const res = await fetch(path);
@@ -70,11 +75,10 @@ async function fetchJson<T>(path: string): Promise<T> {
 
 export async function loadData() {
   const [zonesRaw, companiesRaw, coverageRaw, notesRaw] = await Promise.all([
-    fetchJson<unknown>(`${DATA_BASE}/zones.json`),
-    fetchJson<unknown>(`${DATA_BASE}/companies.json`),
-    fetchJson<unknown>(`${DATA_BASE}/coverage.json`),
-    // notes опционален
-    fetch(`${DATA_BASE}/notes.json`)
+    fetchJson<unknown>(withBase('data/zones.json')),
+    fetchJson<unknown>(withBase('data/companies.json')),
+    fetchJson<unknown>(withBase('data/coverage.json')),
+    fetch(withBase('data/notes.json'))
       .then((r) => (r.ok ? r.json() : []))
       .catch(() => [])
   ]);
