@@ -20,1177 +20,607 @@
   {
     "id": "mo_004",
     "type": "mo",
-    "name": "Приморский",
+    "name": "Сапёрный",
     "parentDistrictId": null
   },
   {
     "id": "mo_005",
     "type": "mo",
-    "name": "Купчино",
+    "name": "Ивановский",
     "parentDistrictId": null
   },
   {
     "id": "mo_006",
     "type": "mo",
-    "name": "Георгиевский",
+    "name": "Коломна",
     "parentDistrictId": null
   },
   {
     "id": "mo_007",
     "type": "mo",
-    "name": "Парголово",
+    "name": "Муниципальный округ № 75",
     "parentDistrictId": null
   },
   {
     "id": "mo_008",
     "type": "mo",
-    "name": "Невская застава",
+    "name": "Муниципальный округ № 53",
     "parentDistrictId": null
   },
   {
     "id": "mo_009",
     "type": "mo",
-    "name": "Академическое",
+    "name": "Невская застава",
     "parentDistrictId": null
   },
   {
     "id": "mo_010",
     "type": "mo",
-    "name": "Гавань",
+    "name": "Юго-Запад",
     "parentDistrictId": null
   },
   {
     "id": "mo_011",
     "type": "mo",
-    "name": "№ 65",
+    "name": "Прометей",
     "parentDistrictId": null
   },
   {
     "id": "mo_012",
     "type": "mo",
-    "name": "Московская застава",
+    "name": "Муниципальный округ № 25",
     "parentDistrictId": null
   },
   {
     "id": "mo_013",
     "type": "mo",
-    "name": "Сосновая поляна",
+    "name": "Сосновское",
     "parentDistrictId": null
   },
   {
     "id": "mo_014",
     "type": "mo",
-    "name": "Ланское",
+    "name": "Адмиралтейский округ",
     "parentDistrictId": null
   },
   {
     "id": "mo_015",
     "type": "mo",
-    "name": "Кировск",
+    "name": "Семёновский",
     "parentDistrictId": null
   },
   {
     "id": "mo_016",
     "type": "mo",
-    "name": "Смольнинское",
+    "name": "Владимирский округ",
     "parentDistrictId": null
   },
   {
     "id": "mo_017",
     "type": "mo",
-    "name": "Светлановское",
+    "name": "Дворцовый округ",
     "parentDistrictId": null
   },
   {
     "id": "mo_018",
     "type": "mo",
-    "name": "Пискарёвка",
+    "name": "Смольнинское",
     "parentDistrictId": null
   },
   {
     "id": "mo_019",
     "type": "mo",
-    "name": "Коломна",
+    "name": "Муниципальный округ № 72",
     "parentDistrictId": null
   },
   {
     "id": "mo_020",
     "type": "mo",
-    "name": "Дворцовый округ",
+    "name": "Купчино",
     "parentDistrictId": null
   },
   {
     "id": "mo_021",
     "type": "mo",
-    "name": "Лиговка-Ямская",
+    "name": "Введенский",
     "parentDistrictId": null
   },
   {
     "id": "mo_022",
     "type": "mo",
-    "name": "Посёлок Шушары",
+    "name": "Кронверкское",
     "parentDistrictId": null
   },
   {
     "id": "mo_023",
     "type": "mo",
-    "name": "Кронштадт",
+    "name": "Пороховые",
     "parentDistrictId": null
   },
   {
     "id": "mo_024",
     "type": "mo",
-    "name": "Петровский",
+    "name": "Большая Охта",
     "parentDistrictId": null
   },
   {
     "id": "mo_025",
     "type": "mo",
-    "name": "Посёлок Стрельна",
+    "name": "Малая Охта",
     "parentDistrictId": null
   },
   {
     "id": "mo_026",
     "type": "mo",
-    "name": "Горелово",
+    "name": "Красненькая речка",
     "parentDistrictId": null
   },
   {
     "id": "mo_027",
     "type": "mo",
-    "name": "Сестрорецк",
+    "name": "Муниципальный округ Ульянка",
     "parentDistrictId": null
   },
   {
     "id": "mo_028",
     "type": "mo",
-    "name": "Красное Село",
+    "name": "Парнас",
     "parentDistrictId": null
   },
   {
     "id": "mo_029",
     "type": "mo",
-    "name": "Сергиевское",
+    "name": "Шувалово-Озерки",
     "parentDistrictId": null
   },
   {
     "id": "mo_030",
     "type": "mo",
-    "name": "Чкаловское",
+    "name": "Муниципальный округ № 7",
     "parentDistrictId": null
   },
   {
     "id": "mo_031",
     "type": "mo",
-    "name": "Колпино",
+    "name": "Коломяги",
     "parentDistrictId": null
   },
   {
     "id": "mo_032",
     "type": "mo",
-    "name": "Петергоф",
+    "name": "Юнтолово",
     "parentDistrictId": null
   },
   {
     "id": "mo_033",
     "type": "mo",
-    "name": "Ломоносов",
+    "name": "Лисий Нос",
     "parentDistrictId": null
   },
   {
     "id": "mo_034",
     "type": "mo",
-    "name": "Посёлок Понтонный",
+    "name": "Чёрная речка",
     "parentDistrictId": null
   },
   {
     "id": "mo_035",
     "type": "mo",
-    "name": "Посёлок Петро-Славянка",
+    "name": "Комендантский аэродром",
     "parentDistrictId": null
   },
   {
     "id": "mo_036",
     "type": "mo",
-    "name": "Посёлок Металлострой",
+    "name": "Муниципальный округ № 65",
     "parentDistrictId": null
   },
   {
     "id": "mo_037",
     "type": "mo",
-    "name": "Посёлок Усть-Ижора",
+    "name": "Озеро Долгое",
     "parentDistrictId": null
   },
   {
     "id": "mo_038",
     "type": "mo",
-    "name": "Посёлок Пушкин",
+    "name": "Муниципальный округ № 78",
     "parentDistrictId": null
   },
   {
     "id": "mo_039",
     "type": "mo",
-    "name": "Посёлок Павловск",
+    "name": "Волковское",
     "parentDistrictId": null
   },
   {
     "id": "mo_040",
     "type": "mo",
-    "name": "Посёлок Александровская",
+    "name": "Аптекарский остров",
     "parentDistrictId": null
   },
   {
     "id": "mo_041",
     "type": "mo",
-    "name": "Посёлок Тярлево",
+    "name": "Пулковский меридиан",
     "parentDistrictId": null
   },
   {
     "id": "mo_042",
     "type": "mo",
-    "name": "Посёлок Шушары (территория)",
+    "name": "Урицк",
     "parentDistrictId": null
   },
   {
     "id": "mo_043",
     "type": "mo",
-    "name": "Посёлок Левашово",
+    "name": "Звёздное",
     "parentDistrictId": null
   },
   {
     "id": "mo_044",
     "type": "mo",
-    "name": "Посёлок Парголово",
+    "name": "Новоизмайловское",
     "parentDistrictId": null
   },
   {
     "id": "mo_045",
     "type": "mo",
-    "name": "Посёлок Лисий Нос",
+    "name": "Гагаринское",
     "parentDistrictId": null
   },
   {
     "id": "mo_046",
     "type": "mo",
-    "name": "Посёлок Белоостров",
+    "name": "Ржевка",
     "parentDistrictId": null
   },
   {
     "id": "mo_047",
     "type": "mo",
-    "name": "Посёлок Молодёжное",
+    "name": "Полюстрово",
     "parentDistrictId": null
   },
   {
     "id": "mo_048",
     "type": "mo",
-    "name": "Посёлок Комарово",
+    "name": "Морские ворота",
     "parentDistrictId": null
   },
   {
     "id": "mo_049",
     "type": "mo",
-    "name": "Посёлок Репино",
+    "name": "Усть-Ижора",
     "parentDistrictId": null
   },
   {
     "id": "mo_050",
     "type": "mo",
-    "name": "Посёлок Солнечное",
+    "name": "Автово",
     "parentDistrictId": null
   },
   {
     "id": "mo_051",
     "type": "mo",
-    "name": "Посёлок Ушково",
+    "name": "Дачное",
     "parentDistrictId": null
   },
   {
     "id": "mo_052",
     "type": "mo",
-    "name": "Посёлок Серово",
+    "name": "Муниципальный округ № 21",
     "parentDistrictId": null
   },
   {
     "id": "mo_053",
     "type": "mo",
-    "name": "Посёлок Смолячково",
+    "name": "Северный",
     "parentDistrictId": null
   },
   {
     "id": "mo_054",
     "type": "mo",
-    "name": "Посёлок Песочный",
+    "name": "Финляндский округ",
     "parentDistrictId": null
   },
   {
     "id": "mo_055",
     "type": "mo",
-    "name": "Посёлок Белоостров (территория)",
+    "name": "Академическое",
     "parentDistrictId": null
   },
   {
     "id": "mo_056",
     "type": "mo",
-    "name": "Посёлок Левашово (территория)",
+    "name": "Пискарёвка",
     "parentDistrictId": null
   },
   {
     "id": "mo_057",
     "type": "mo",
-    "name": "Посёлок Парголово (территория)",
+    "name": "Гражданка",
     "parentDistrictId": null
   },
   {
     "id": "mo_058",
     "type": "mo",
-    "name": "Город Зеленогорск",
+    "name": "Парголово",
     "parentDistrictId": null
   },
   {
     "id": "mo_059",
     "type": "mo",
-    "name": "Посёлок Сестрорецк (территория)",
+    "name": "Левашово",
     "parentDistrictId": null
   },
   {
     "id": "mo_060",
     "type": "mo",
-    "name": "Княжево",
+    "name": "Песочный",
     "parentDistrictId": null
   },
   {
     "id": "mo_061",
     "type": "mo",
-    "name": "Ульянка",
+    "name": "Светлановское",
     "parentDistrictId": null
   },
   {
     "id": "mo_062",
     "type": "mo",
-    "name": "Дачное",
+    "name": "Сампсониевское",
     "parentDistrictId": null
   },
   {
     "id": "mo_063",
     "type": "mo",
-    "name": "Автово",
+    "name": "Остров Декабристов",
     "parentDistrictId": null
   },
   {
     "id": "mo_064",
     "type": "mo",
-    "name": "Нарвский округ",
+    "name": "Гавань",
     "parentDistrictId": null
   },
   {
     "id": "mo_065",
     "type": "mo",
-    "name": "Урицк",
+    "name": "Морской",
     "parentDistrictId": null
   },
   {
     "id": "mo_066",
     "type": "mo",
-    "name": "Сосновское",
+    "name": "Муниципальный округ № 6",
     "parentDistrictId": null
   },
   {
     "id": "mo_067",
     "type": "mo",
-    "name": "Финляндский округ",
+    "name": "Сенной округ",
     "parentDistrictId": null
   },
   {
     "id": "mo_068",
     "type": "mo",
-    "name": "Полюстрово",
+    "name": "Серово",
     "parentDistrictId": null
   },
   {
     "id": "mo_069",
     "type": "mo",
-    "name": "Пороховые",
+    "name": "Зеленогорск",
     "parentDistrictId": null
   },
   {
     "id": "mo_070",
     "type": "mo",
-    "name": "Ржевка",
+    "name": "Ушково",
     "parentDistrictId": null
   },
   {
     "id": "mo_071",
     "type": "mo",
-    "name": "Семеновский",
+    "name": "Комарово",
     "parentDistrictId": null
   },
   {
     "id": "mo_072",
     "type": "mo",
-    "name": "Измайловское",
+    "name": "Репино",
     "parentDistrictId": null
   },
   {
     "id": "mo_073",
     "type": "mo",
-    "name": "Адмиралтейский округ",
+    "name": "Солнечное",
     "parentDistrictId": null
   },
   {
     "id": "mo_074",
     "type": "mo",
-    "name": "Сенной округ",
+    "name": "Белоостров",
     "parentDistrictId": null
   },
   {
     "id": "mo_075",
     "type": "mo",
-    "name": "Кронверкское",
+    "name": "Рыбацкое",
     "parentDistrictId": null
   },
   {
     "id": "mo_076",
     "type": "mo",
-    "name": "Посадский",
+    "name": "Обуховский",
     "parentDistrictId": null
   },
   {
     "id": "mo_077",
     "type": "mo",
-    "name": "Введенский",
+    "name": "Ломоносов",
     "parentDistrictId": null
   },
   {
     "id": "mo_078",
     "type": "mo",
-    "name": "Петровский",
+    "name": "Сосновая поляна",
     "parentDistrictId": null
   },
   {
     "id": "mo_079",
     "type": "mo",
-    "name": "№ 7",
+    "name": "Южно-Приморский",
     "parentDistrictId": null
   },
   {
     "id": "mo_080",
     "type": "mo",
-    "name": "Остров Декабристов",
+    "name": "Горелово",
     "parentDistrictId": null
   },
   {
     "id": "mo_081",
     "type": "mo",
-    "name": "Морские ворота",
+    "name": "Красное Село",
     "parentDistrictId": null
   },
   {
     "id": "mo_082",
     "type": "mo",
-    "name": "№ 54",
+    "name": "Тярлево",
     "parentDistrictId": null
   },
   {
     "id": "mo_083",
     "type": "mo",
-    "name": "Владимирский округ",
+    "name": "Александровская",
     "parentDistrictId": null
   },
   {
     "id": "mo_084",
     "type": "mo",
-    "name": "Литейный округ",
+    "name": "Московская застава",
     "parentDistrictId": null
   },
   {
     "id": "mo_085",
     "type": "mo",
-    "name": "№ 78",
+    "name": "Петро-Славянка",
     "parentDistrictId": null
   },
   {
     "id": "mo_086",
     "type": "mo",
-    "name": "№ 72",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_087",
-    "type": "mo",
-    "name": "Посёлок Таврический",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_088",
-    "type": "mo",
-    "name": "Гражданка",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_089",
-    "type": "mo",
-    "name": "Прометей",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_090",
-    "type": "mo",
-    "name": "№ 21",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_091",
-    "type": "mo",
-    "name": "№ 15",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_092",
-    "type": "mo",
-    "name": "№ 17",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_093",
-    "type": "mo",
-    "name": "№ 75",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_094",
-    "type": "mo",
-    "name": "№ 74",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_095",
-    "type": "mo",
-    "name": "№ 73",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_096",
-    "type": "mo",
-    "name": "№ 8",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_097",
-    "type": "mo",
-    "name": "№ 9",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_098",
-    "type": "mo",
-    "name": "Посёлок Рыбацкое",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_099",
-    "type": "mo",
-    "name": "Обуховский",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_100",
-    "type": "mo",
-    "name": "Ивановский",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_101",
-    "type": "mo",
-    "name": "№ 56",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_102",
-    "type": "mo",
-    "name": "№ 57",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_103",
-    "type": "mo",
-    "name": "Волковское",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_104",
-    "type": "mo",
-    "name": "Купчино",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_105",
-    "type": "mo",
-    "name": "Балканский",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_106",
-    "type": "mo",
-    "name": "№ 5",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_107",
-    "type": "mo",
-    "name": "Муниципальный округ № 6",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_108",
-    "type": "mo",
-    "name": "Северный",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_109",
-    "type": "mo",
-    "name": "Южно-Приморский",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_110",
-    "type": "mo",
-    "name": "Константиновское",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_111",
-    "type": "mo",
-    "name": "Ломоносов",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_112",
-    "type": "mo",
-    "name": "Петергоф",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_113",
-    "type": "mo",
-    "name": "Сосновая Поляна",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_114",
-    "type": "mo",
-    "name": "Урицк",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_115",
-    "type": "mo",
-    "name": "Красное Село",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_116",
-    "type": "mo",
-    "name": "Горелово",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_117",
-    "type": "mo",
-    "name": "Кронштадт",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_118",
-    "type": "mo",
-    "name": "Пушкин",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_119",
-    "type": "mo",
-    "name": "Павловск",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_120",
-    "type": "mo",
-    "name": "Посёлок Шушары",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_121",
-    "type": "mo",
-    "name": "Левашово",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_122",
-    "type": "mo",
-    "name": "Парголово",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_123",
-    "type": "mo",
-    "name": "Сестрорецк",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_124",
-    "type": "mo",
-    "name": "Посёлок Песочный",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_125",
-    "type": "mo",
-    "name": "Колпино",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_126",
-    "type": "mo",
     "name": "Понтонный",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_127",
-    "type": "mo",
-    "name": "Петро-Славянка",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_128",
-    "type": "mo",
-    "name": "Усть-Ижора",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_129",
-    "type": "mo",
-    "name": "Александровская",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_130",
-    "type": "mo",
-    "name": "Тярлево",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_131",
-    "type": "mo",
-    "name": "Лиговка-Ямская",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_132",
-    "type": "mo",
-    "name": "Владимирский округ",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_133",
-    "type": "mo",
-    "name": "Литейный округ",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_134",
-    "type": "mo",
-    "name": "Смольнинское",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_135",
-    "type": "mo",
-    "name": "№ 78",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_136",
-    "type": "mo",
-    "name": "Дворцовый округ",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_137",
-    "type": "mo",
-    "name": "Адмиралтейский округ",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_138",
-    "type": "mo",
-    "name": "Сенной округ",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_139",
-    "type": "mo",
-    "name": "Семеновский",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_140",
-    "type": "mo",
-    "name": "Измайловское",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_141",
-    "type": "mo",
-    "name": "Юнтолово",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_142",
-    "type": "mo",
-    "name": "Ланское",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_143",
-    "type": "mo",
-    "name": "№ 65",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_144",
-    "type": "mo",
-    "name": "Озеро Долгое",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_145",
-    "type": "mo",
-    "name": "Комендантский аэродром",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_146",
-    "type": "mo",
-    "name": "Светлановское",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_147",
-    "type": "mo",
-    "name": "Пискарёвка",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_148",
-    "type": "mo",
-    "name": "Академическое",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_149",
-    "type": "mo",
-    "name": "Финляндский округ",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_150",
-    "type": "mo",
-    "name": "Полюстрово",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_151",
-    "type": "mo",
-    "name": "Пороховые",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_152",
-    "type": "mo",
-    "name": "Ржевка",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_153",
-    "type": "mo",
-    "name": "Московская застава",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_154",
-    "type": "mo",
-    "name": "Нарвский округ",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_155",
-    "type": "mo",
-    "name": "Княжево",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_156",
-    "type": "mo",
-    "name": "Ульянка",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_157",
-    "type": "mo",
-    "name": "Дачное",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_158",
-    "type": "mo",
-    "name": "Автово",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_159",
-    "type": "mo",
-    "name": "Урицк",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_160",
-    "type": "mo",
-    "name": "Лиговка-Ямская",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_161",
-    "type": "mo",
-    "name": "Коломна",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_162",
-    "type": "mo",
-    "name": "Лиговка-Ямская",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_163",
-    "type": "mo",
-    "name": "Невская застава",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_164",
-    "type": "mo",
-    "name": "Ивановский",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_165",
-    "type": "mo",
-    "name": "Обуховский",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_166",
-    "type": "mo",
-    "name": "Посёлок Рыбацкое",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_167",
-    "type": "mo",
-    "name": "Волковское",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_168",
-    "type": "mo",
-    "name": "№ 72",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_169",
-    "type": "mo",
-    "name": "Кронверкское",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_170",
-    "type": "mo",
-    "name": "Посадский",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_171",
-    "type": "mo",
-    "name": "Введенский",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_172",
-    "type": "mo",
-    "name": "Чкаловское",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_173",
-    "type": "mo",
-    "name": "№ 54",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_174",
-    "type": "mo",
-    "name": "№ 74",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_175",
-    "type": "mo",
-    "name": "№ 73",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_176",
-    "type": "mo",
-    "name": "№ 75",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_177",
-    "type": "mo",
-    "name": "№ 21",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_178",
-    "type": "mo",
-    "name": "№ 57",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_179",
-    "type": "mo",
-    "name": "№ 56",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_180",
-    "type": "mo",
-    "name": "№ 17",
     "parentDistrictId": null
   },
   {
     "id": "mo_181",
     "type": "mo",
-    "name": "№ 15",
+    "name": "Лахта-Ольгино",
     "parentDistrictId": null
   },
   {
     "id": "mo_182",
     "type": "mo",
-    "name": "№ 5",
+    "name": "Кронштадт",
     "parentDistrictId": null
   },
   {
     "id": "mo_183",
     "type": "mo",
-    "name": "Муниципальный округ № 6",
+    "name": "Сестрорецк",
     "parentDistrictId": null
   },
   {
     "id": "mo_184",
     "type": "mo",
-    "name": "№ 8",
+    "name": "Петергоф",
     "parentDistrictId": null
   },
   {
     "id": "mo_185",
     "type": "mo",
-    "name": "№ 9",
+    "name": "Стрельна",
     "parentDistrictId": null
   },
   {
     "id": "mo_186",
     "type": "mo",
-    "name": "№ 7",
+    "name": "Павловск",
     "parentDistrictId": null
   },
   {
     "id": "mo_187",
     "type": "mo",
-    "name": "№ 8",
+    "name": "Пушкин",
     "parentDistrictId": null
   },
   {
     "id": "mo_188",
     "type": "mo",
-    "name": "№ 9",
+    "name": "Шушары",
     "parentDistrictId": null
   },
   {
     "id": "mo_189",
     "type": "mo",
-    "name": "№ 7",
+    "name": "Колпино",
     "parentDistrictId": null
   },
   {
     "id": "mo_190",
     "type": "mo",
-    "name": "Оккервиль",
+    "name": "Смолячково",
     "parentDistrictId": null
   },
   {
     "id": "mo_191",
     "type": "mo",
-    "name": "Правобережный",
+    "name": "Молодёжное",
     "parentDistrictId": null
   },
   {
     "id": "mo_192",
     "type": "mo",
-    "name": "Георгиевский",
+    "name": "Невский округ",
     "parentDistrictId": null
   },
   {
     "id": "mo_193",
     "type": "mo",
-    "name": "Петровский",
+    "name": "Муниципальный округ № 54",
     "parentDistrictId": null
   },
   {
     "id": "mo_194",
     "type": "mo",
-    "name": "Лиговка-Ямская",
+    "name": "Балканский",
     "parentDistrictId": null
   },
   {
     "id": "mo_195",
     "type": "mo",
-    "name": "Морские ворота",
+    "name": "Посадский",
     "parentDistrictId": null
   },
   {
     "id": "mo_196",
     "type": "mo",
-    "name": "Остров Декабристов",
-    "parentDistrictId": null
-  },
-  {
-    "id": "mo_197",
-    "type": "mo",
-    "name": "№ 54",
+    "name": "Муниципальный округ № 15",
     "parentDistrictId": null
   },
   {
     "id": "mo_198",
     "type": "mo",
-    "name": "№ 74",
+    "name": "Литейный округ",
     "parentDistrictId": null
   },
   {
     "id": "mo_199",
     "type": "mo",
-    "name": "№ 73",
+    "name": "Лиговка-Ямская",
     "parentDistrictId": null
   },
   {
