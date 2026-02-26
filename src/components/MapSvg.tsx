@@ -129,9 +129,9 @@ export default function MapSvg({
     return { winner, zoneId: getZoneId(winner) };
   }
 
-  // Hover / click (React handlers)
+  // Hover / click
   function onMove(e: React.MouseEvent<HTMLDivElement>) {
-    if (isPanning) return; // не показываем tooltip пока тянем
+    if (isPanning) return;
     const { zoneId } = resolveTarget(e.clientX, e.clientY, e.target);
     if (zoneId) {
       onHoverZone(zoneId);
@@ -153,7 +153,7 @@ export default function MapSvg({
     if (zoneId) onPickZone(zoneId);
   }
 
-  // Zoom helper: zoom around a point (clientX/clientY)
+  // Zoom helper: zoom around cursor
   function zoomAt(clientX: number, clientY: number, nextScale: number) {
     const el = containerRef.current;
     if (!el) return;
@@ -162,11 +162,9 @@ export default function MapSvg({
     const px = clientX - rect.left;
     const py = clientY - rect.top;
 
-    // world coords before zoom
     const wx = (px - tx) / scale;
     const wy = (py - ty) / scale;
 
-    // new translation so that (wx, wy) stays under cursor
     const nextTx = px - wx * nextScale;
     const nextTy = py - wy * nextScale;
 
@@ -181,7 +179,7 @@ export default function MapSvg({
 
   function onWheel(e: React.WheelEvent<HTMLDivElement>) {
     e.preventDefault();
-    const delta = -e.deltaY; // wheel up -> zoom in
+    const delta = -e.deltaY;
     const factor = delta > 0 ? 1.12 : 1 / 1.12;
     const next = clampScale(scale * factor);
     zoomAt(e.clientX, e.clientY, next);
@@ -194,7 +192,6 @@ export default function MapSvg({
   }
 
   function onMouseDown(e: React.MouseEvent<HTMLDivElement>) {
-    // левая кнопка
     if (e.button !== 0) return;
     setIsPanning(true);
     setTooltip((t) => (t.visible ? { ...t, visible: false, zoneId: null } : t));
@@ -243,14 +240,15 @@ export default function MapSvg({
         onClick={onClick}
         onWheel={onWheel}
         onDoubleClick={onDoubleClick}
-<div
-  ref={innerRef}
-  className="svgInner"
-  style={{
-    transform: `translate(${Math.round(tx)}px, ${Math.round(ty)}px) scale(${scale})`
-  }}
-  dangerouslySetInnerHTML={{ __html: svgText }}
-/>
+      >
+        <div
+          ref={innerRef}
+          className="svgInner"
+          style={{
+            transform: `translate(${Math.round(tx)}px, ${Math.round(ty)}px) scale(${scale})`
+          }}
+          dangerouslySetInnerHTML={{ __html: svgText }}
+        />
       </div>
 
       {/* Zoom controls */}
@@ -276,4 +274,3 @@ export default function MapSvg({
     </div>
   );
 }
-
