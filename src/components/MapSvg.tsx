@@ -25,9 +25,10 @@ export default function MapSvg({
   onSvgLoaded
 }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const innerRef = useRef<HTMLDivElement | null>(null);
+
   const [svgText, setSvgText] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-  const [debug, setDebug] = useState<string>('debug: …');
 
   const zoneById = useMemo(() => new Map(zones.map((z) => [z.id, z])), [zones]);
 
@@ -37,6 +38,16 @@ export default function MapSvg({
     y: 0,
     zoneId: null
   });
+
+  // zoom state
+  const [scale, setScale] = useState(1);
+  const [tx, setTx] = useState(0);
+  const [ty, setTy] = useState(0);
+  const [isPanning, setIsPanning] = useState(false);
+  const panRef = useRef<{ startX: number; startY: number; startTx: number; startTy: number } | null>(null);
+
+  const MIN_SCALE = 0.7;
+  const MAX_SCALE = 6;
 
   // Load SVG
   useEffect(() => {
@@ -66,59 +77,9 @@ export default function MapSvg({
     };
   }, [onSvgLoaded]);
 
-  function closestZone(el: Element | null): Element | null {
-    if (!el) return null;
-    return el.closest('[data-zone-id],[id]');
-  }
-
-  function getZoneId(el: Element | null): string | null {
-    if (!el) return null;
-    return el.getAttribute('data-zone-id') || el.getAttribute('id');
-  }
-
-  function resolveTarget(e: React.MouseEvent<HTMLDivElement>) {
-    // способ A: e.target
-    const a = e.target instanceof Element ? closestZone(e.target) : null;
-
-    // способ B: elementFromPoint (если target странный)
-    const bEl = document.elementFromPoint(e.clientX, e.clientY);
-    const b = bEl ? closestZone(bEl) : null;
-
-    const winner = a || b;
-    const zoneId = getZoneId(winner);
-
-    const t = winner?.tagName?.toLowerCase() ?? 'none';
-    const id = winner?.getAttribute?.('id') ?? '';
-    const dz = winner?.getAttribute?.('data-zone-id') ?? '';
-    setDebug(`debug: tag=${t} id=${id} data-zone-id=${dz} -> zoneId=${zoneId ?? 'null'}`);
-
-    return { winner, zoneId };
-  }
-
-  function onMove(e: React.MouseEvent<HTMLDivElement>) {
-    const { zoneId } = resolveTarget(e);
-    if (zoneId) {
-      onHoverZone(zoneId);
-      setTooltip({ visible: true, x: e.clientX, y: e.clientY, zoneId });
-    } else {
-      onHoverZone(null);
-      setTooltip((t) => (t.visible ? { ...t, visible: false, zoneId: null } : t));
-    }
-  }
-
-  function onLeave() {
-    onHoverZone(null);
-    setTooltip((t) => (t.visible ? { ...t, visible: false, zoneId: null } : t));
-  }
-
-  function onClick(e: React.MouseEvent<HTMLDivElement>) {
-    const { zoneId } = resolveTarget(e);
-    if (zoneId) onPickZone(zoneId);
-  }
-
-  // Apply styles after render
+  // Apply styles after render (zones + pointer events)
   useEffect(() => {
-    const root = containerRef.current;
+    const root = innerRef.current;
     if (!root) return;
 
     const shapes = Array.from(root.querySelectorAll<SVGElement>('svg path, svg polygon'));
@@ -145,11 +106,119 @@ export default function MapSvg({
       n.classList.toggle('is-hovered', hoverZoneId === zoneId);
     });
 
-    // на всякий случай включим pointer events на svg/группах
     const svg = root.querySelector('svg') as SVGElement | null;
     if (svg) svg.style.pointerEvents = 'auto';
     root.querySelectorAll<SVGElement>('svg g').forEach((g) => (g.style.pointerEvents = 'auto'));
   }, [coveredZoneIds, activeZoneId, hoverZoneId, districtFilterId, zoneById, svgText]);
+
+  function closestZone(el: Element | null): Element | null {
+    if (!el) return null;
+    return el.closest('[data-zone-id],[id]');
+  }
+
+  function getZoneId(el: Element | null): string | null {
+    if (!el) return null;
+    return el.getAttribute('data-zone-id') || el.getAttribute('id');
+  }
+
+  function resolveTarget(clientX: number, clientY: number, target: EventTarget | null) {
+    const a = target instanceof Element ? closestZone(target) : null;
+    const bEl = document.elementFromPoint(clientX, clientY);
+    const b = bEl ? closestZone(bEl) : null;
+    const winner = a || b;
+    return { winner, zoneId: getZoneId(winner) };
+  }
+
+  // Hover / click (React handlers)
+  function onMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (isPanning) return; // не показываем tooltip пока тянем
+    const { zoneId } = resolveTarget(e.clientX, e.clientY, e.target);
+    if (zoneId) {
+      onHoverZone(zoneId);
+      setTooltip({ visible: true, x: e.clientX, y: e.clientY, zoneId });
+    } else {
+      onHoverZone(null);
+      setTooltip((t) => (t.visible ? { ...t, visible: false, zoneId: null } : t));
+    }
+  }
+
+  function onLeave() {
+    onHoverZone(null);
+    setTooltip((t) => (t.visible ? { ...t, visible: false, zoneId: null } : t));
+  }
+
+  function onClick(e: React.MouseEvent<HTMLDivElement>) {
+    if (isPanning) return;
+    const { zoneId } = resolveTarget(e.clientX, e.clientY, e.target);
+    if (zoneId) onPickZone(zoneId);
+  }
+
+  // Zoom helper: zoom around a point (clientX/clientY)
+  function zoomAt(clientX: number, clientY: number, nextScale: number) {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const rect = el.getBoundingClientRect();
+    const px = clientX - rect.left;
+    const py = clientY - rect.top;
+
+    // world coords before zoom
+    const wx = (px - tx) / scale;
+    const wy = (py - ty) / scale;
+
+    // new translation so that (wx, wy) stays under cursor
+    const nextTx = px - wx * nextScale;
+    const nextTy = py - wy * nextScale;
+
+    setScale(nextScale);
+    setTx(nextTx);
+    setTy(nextTy);
+  }
+
+  function clampScale(s: number) {
+    return Math.max(MIN_SCALE, Math.min(MAX_SCALE, s));
+  }
+
+  function onWheel(e: React.WheelEvent<HTMLDivElement>) {
+    e.preventDefault();
+    const delta = -e.deltaY; // wheel up -> zoom in
+    const factor = delta > 0 ? 1.12 : 1 / 1.12;
+    const next = clampScale(scale * factor);
+    zoomAt(e.clientX, e.clientY, next);
+  }
+
+  function onDoubleClick(e: React.MouseEvent<HTMLDivElement>) {
+    e.preventDefault();
+    const next = clampScale(scale * 1.3);
+    zoomAt(e.clientX, e.clientY, next);
+  }
+
+  function onMouseDown(e: React.MouseEvent<HTMLDivElement>) {
+    // левая кнопка
+    if (e.button !== 0) return;
+    setIsPanning(true);
+    setTooltip((t) => (t.visible ? { ...t, visible: false, zoneId: null } : t));
+    panRef.current = { startX: e.clientX, startY: e.clientY, startTx: tx, startTy: ty };
+  }
+
+  function onMouseUp() {
+    setIsPanning(false);
+    panRef.current = null;
+  }
+
+  function onMouseMovePan(e: React.MouseEvent<HTMLDivElement>) {
+    if (!isPanning || !panRef.current) return;
+    const dx = e.clientX - panRef.current.startX;
+    const dy = e.clientY - panRef.current.startY;
+    setTx(panRef.current.startTx + dx);
+    setTy(panRef.current.startTy + dy);
+  }
+
+  function resetView() {
+    setScale(1);
+    setTx(0);
+    setTy(0);
+  }
 
   const tooltipZone = tooltip.zoneId ? zoneById.get(tooltip.zoneId) : null;
 
@@ -157,21 +226,46 @@ export default function MapSvg({
   if (!svgText) return <div className="muted">Загрузка SVG…</div>;
 
   return (
-    <div className="mapWrap">
+    <div className="mapWrap" style={{ position: 'relative' }}>
       <div
         ref={containerRef}
-        className="svgContainer"
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
+        className={`svgContainer ${isPanning ? 'is-panning' : ''}`}
+        onMouseMove={(e) => {
+          onMouseMovePan(e);
+          onMove(e);
+        }}
+        onMouseLeave={() => {
+          onLeave();
+          onMouseUp();
+        }}
+        onMouseUp={onMouseUp}
+        onMouseDown={onMouseDown}
         onClick={onClick}
-        dangerouslySetInnerHTML={{ __html: svgText }}
-      />
-
-      {/* debug плашка */}
-      <div style={{ position: 'absolute', left: 10, top: 10, zIndex: 5, fontSize: 12, color: '#9ca3af' }}>
-        {debug}
+        onWheel={onWheel}
+        onDoubleClick={onDoubleClick}
+      >
+        <div
+          ref={innerRef}
+          className="svgInner"
+          style={{ transform: `translate(${tx}px, ${ty}px) scale(${scale})` }}
+          dangerouslySetInnerHTML={{ __html: svgText }}
+        />
       </div>
 
+      {/* Zoom controls */}
+      <div style={{ position: 'absolute', right: 18, top: 18, display: 'flex', gap: 8, zIndex: 10 }}>
+        <button className="btn btn--ghost btn--small" type="button" onClick={() => setScale((s) => clampScale(s / 1.12))}>
+          −
+        </button>
+        <button className="btn btn--ghost btn--small" type="button" onClick={() => setScale((s) => clampScale(s * 1.12))}>
+          +
+        </button>
+        <button className="btn btn--ghost btn--small" type="button" onClick={resetView}>
+          Reset
+        </button>
+      </div>
+
+      {/* Tooltip */}
       {tooltip.visible && tooltipZone ? (
         <div className="tooltip" style={{ left: tooltip.x + 12, top: tooltip.y + 12 }}>
           <div style={{ fontWeight: 600 }}>{tooltipZone.name}</div>
