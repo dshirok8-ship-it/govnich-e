@@ -1,5 +1,33 @@
 [
-  { "companyId": "uk_nevsky_home", "zoneId": "district_01" },
-  { "companyId": "uk_nevsky_home", "zoneId": "mo_001" },
-  { "companyId": "spb_rent_mgmt", "zoneId": "mo_003" }
+  { "companyId": "uk_alpha", "zoneId": "mo_001" },
+  { "companyId": "uk_alpha", "zoneId": "mo_002" },
+  { "companyId": "uk_alpha", "zoneId": "mo_003" },
+
+  { "companyId": "uk_beta", "zoneId": "mo_001" },
+  { "companyId": "uk_beta", "zoneId": "mo_002" },
+  { "companyId": "uk_beta", "zoneId": "mo_003" },
+
+  { "companyId": "uk_gamma", "zoneId": "mo_001" },
+  { "companyId": "uk_gamma", "zoneId": "mo_002" },
+  { "companyId": "uk_gamma", "zoneId": "mo_003" },
+
+  { "companyId": "uk_delta", "zoneId": "mo_001" },
+  { "companyId": "uk_delta", "zoneId": "mo_002" },
+  { "companyId": "uk_delta", "zoneId": "mo_003" },
+
+  { "companyId": "uk_epsilon", "zoneId": "mo_004" },
+  { "companyId": "uk_epsilon", "zoneId": "mo_005" },
+
+  { "companyId": "uk_zeta", "zoneId": "mo_006" },
+
+  { "companyId": "uk_eta", "zoneId": "mo_006" },
+  { "companyId": "uk_eta", "zoneId": "mo_007" },
+
+  { "companyId": "uk_theta", "zoneId": "mo_008" },
+  { "companyId": "uk_theta", "zoneId": "mo_009" },
+
+  { "companyId": "uk_iota", "zoneId": "mo_010" },
+
+  { "companyId": "uk_kappa", "zoneId": "mo_004" },
+  { "companyId": "uk_kappa", "zoneId": "mo_009" }
 ]
