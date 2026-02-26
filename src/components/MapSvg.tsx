@@ -14,6 +14,9 @@ type Props = {
 
 type TooltipState = { visible: boolean; x: number; y: number; zoneId: string | null };
 
+// ВАЖНО: относительный путь (без ведущего "/"), чтобы работало на GitHub Pages в /<repo>/
+const MAP_SVG_PATH = 'map/spb.svg';
+
 export default function MapSvg({
   zones,
   coveredZoneIds,
@@ -34,14 +37,22 @@ export default function MapSvg({
     return m;
   }, [zones]);
 
-  const [tooltip, setTooltip] = useState<TooltipState>({ visible: false, x: 0, y: 0, zoneId: null });
+  const [tooltip, setTooltip] = useState<TooltipState>({
+    visible: false,
+    x: 0,
+    y: 0,
+    zoneId: null
+  });
 
   // 1) Load SVG as text
   useEffect(() => {
     let cancelled = false;
     setError(null);
 
-    fetch('/map/spb.svg')
+    // cache bust на всякий случай (иногда Pages/браузер кешируют)
+    const url = `${MAP_SVG_PATH}?v=${Date.now()}`;
+
+    fetch(url)
       .then(async (r) => {
         if (!r.ok) throw new Error(`SVG не загрузился (${r.status})`);
         return r.text();
@@ -68,8 +79,7 @@ export default function MapSvg({
 
     function findZoneTarget(target: EventTarget | null): HTMLElement | null {
       if (!(target instanceof HTMLElement)) return null;
-      const zoneEl = target.closest?.('[data-zone-id]') as HTMLElement | null;
-      return zoneEl;
+      return (target.closest?.('[data-zone-id]') as HTMLElement | null) ?? null;
     }
 
     function onMove(e: MouseEvent) {
@@ -95,8 +105,6 @@ export default function MapSvg({
       const zoneId = zoneEl?.getAttribute('data-zone-id');
       if (!zoneId) return;
 
-      // Опционально: приоритет MO над district если вложено (например, path внутри группы района)
-      // Сейчас берём nearest [data-zone-id] — уже достаточно для приоритета "самого глубокого".
       onPickZone(zoneId);
     }
 
@@ -120,15 +128,14 @@ export default function MapSvg({
     nodes.forEach((n) => {
       const zoneId = n.getAttribute('data-zone-id') ?? '';
 
-      // districtFilter: скрываем MO не из выбранного района
       const z = zoneById.get(zoneId);
       const hidden =
-        districtFilterId &&
-        z &&
-        ((z.type === 'district' && z.id !== districtFilterId) ||
-          (z.type === 'mo' && z.parentDistrictId !== districtFilterId));
+        Boolean(districtFilterId) &&
+        Boolean(z) &&
+        ((z!.type === 'district' && z!.id !== districtFilterId) ||
+          (z!.type === 'mo' && z!.parentDistrictId !== districtFilterId));
 
-      n.classList.toggle('is-hidden', Boolean(hidden));
+      n.classList.toggle('is-hidden', hidden);
 
       n.classList.add('zone');
       n.classList.toggle('is-covered', coveredZoneIds.has(zoneId));
@@ -139,19 +146,13 @@ export default function MapSvg({
 
   const tooltipZone = tooltip.zoneId ? zoneById.get(tooltip.zoneId) : null;
 
-  if (error) {
-    return <div className="errorBox">Ошибка: {error}</div>;
-  }
-
-  if (!svgText) {
-    return <div className="muted">Загрузка SVG…</div>;
-  }
+  if (error) return <div className="errorBox">Ошибка: {error}</div>;
+  if (!svgText) return <div className="muted">Загрузка SVG…</div>;
 
   return (
     <div className="mapWrap">
       <div ref={containerRef} className="svgContainer" dangerouslySetInnerHTML={{ __html: svgText }} />
 
-      {/* tooltip рендерим отдельно поверх */}
       {tooltip.visible && tooltipZone ? (
         <div className="tooltip" style={{ left: tooltip.x + 12, top: tooltip.y + 12 }}>
           <div style={{ fontWeight: 600 }}>{tooltipZone.name}</div>
