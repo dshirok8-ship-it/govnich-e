@@ -239,3 +239,22 @@ tr:hover td { background: rgba(17,28,51,0.25); }
 @media (max-width: 760px) {
   .layout { grid-template-columns: 1fr; }
 }
+/* Map zoom / pan */
+.svgContainer {
+  position: relative;
+  overflow: hidden; /* важно: чтобы панорамирование не вылезало */
+  user-select: none;
+  touch-action: none; /* отключаем жесты браузера, чтобы работали наши */
+}
+
+.svgInner {
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.svgContainer.is-panning {
+  cursor: grabbing;
+}
+.svgContainer .zone {
+  vector-effect: non-scaling-stroke; /* линии не толстеют при зуме */
+}
