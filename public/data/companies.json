@@ -1,5 +1,5 @@
 [
-  { "id": "uk_alpha", "name": "УК Альфа", "site": "https://example.com/alpha" },
+  { "id": "uk_alpha", "name": "АйРентАпарт", "site": "https://example.com/alpha" },
   { "id": "uk_beta", "name": "УК Бета", "site": "https://example.com/beta" },
   { "id": "uk_gamma", "name": "УК Гамма", "site": "https://example.com/gamma" },
   { "id": "uk_delta", "name": "УК Дельта", "site": "https://example.com/delta" },
@@ -10,3 +10,4 @@
   { "id": "uk_iota", "name": "УК Иота", "site": "https://example.com/iota" },
   { "id": "uk_kappa", "name": "УК Каппа", "site": "https://example.com/kappa" }
 ]
+
