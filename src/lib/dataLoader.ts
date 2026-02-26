@@ -62,7 +62,7 @@ export const Schemas = {
 // BASE_URL = "/" локально, и "/<repo>/" на GitHub Pages
 const BASE = import.meta.env.BASE_URL;
 
-function withBase(path: string) {
+function url(path: string) {
   // path ожидаем без ведущего "/"
   return `${BASE}${path}`;
 }
@@ -75,10 +75,10 @@ async function fetchJson<T>(path: string): Promise<T> {
 
 export async function loadData() {
   const [zonesRaw, companiesRaw, coverageRaw, notesRaw] = await Promise.all([
-    fetchJson<unknown>(withBase('data/zones.json')),
-    fetchJson<unknown>(withBase('data/companies.json')),
-    fetchJson<unknown>(withBase('data/coverage.json')),
-    fetch(withBase('data/notes.json'))
+    fetchJson<unknown>(url('data/zones.json')),
+    fetchJson<unknown>(url('data/companies.json')),
+    fetchJson<unknown>(url('data/coverage.json')),
+    fetch(url('data/notes.json'))
       .then((r) => (r.ok ? r.json() : []))
       .catch(() => [])
   ]);
