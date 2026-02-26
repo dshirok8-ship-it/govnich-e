@@ -255,6 +255,17 @@ tr:hover td { background: rgba(17,28,51,0.25); }
 .svgContainer.is-panning {
   cursor: grabbing;
 }
+/* Делает SVG резче при трансформациях */
+.svgInner svg {
+  shape-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
+}
+
+.svgInner svg path,
+.svgInner svg polygon {
+  vector-effect: non-scaling-stroke;
+}
 .svgContainer .zone {
   vector-effect: non-scaling-stroke; /* линии не толстеют при зуме */
 }
+
