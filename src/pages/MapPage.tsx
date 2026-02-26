@@ -17,7 +17,10 @@ export default function MapPage() {
   const [activeCompanyId, setActiveCompanyId] = useState<string | null>(null);
   const [activeZoneId, setActiveZoneId] = useState<string | null>(null);
   const [hoverZoneId, setHoverZoneId] = useState<string | null>(null);
+
+  // ВАЖНО: теперь это фильтр по ЗОНЕ (а не по району)
   const [districtFilterId, setDistrictFilterId] = useState<string | null>(null);
+
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -49,10 +52,10 @@ export default function MapPage() {
   const zoneById = useMemo(() => new Map(zones.map((z) => [z.id, z])), [zones]);
   const companyById = useMemo(() => new Map(companies.map((c) => [c.id, c])), [companies]);
 
-  const districts = useMemo(
-    () => zones.filter((z) => z.type === 'district').sort((a, b) => a.name.localeCompare(b.name, 'ru')),
-    [zones]
-  );
+  // ФИЛЬТР: используем все зоны (как “районы” фильтра), сортируем по имени
+  const filterZones = useMemo(() => {
+    return [...zones].sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+  }, [zones]);
 
   // memo: zonesByCompany, companiesByZone
   const zonesByCompany = useMemo(() => {
@@ -95,7 +98,6 @@ export default function MapPage() {
     return ids.map((id) => zoneById.get(id)).filter(Boolean) as Zone[];
   }, [activeCompanyId, zonesByCompany, zoneById]);
 
-  // tooltip requirement: show zone + count of UK on hover
   const hoverTooltipText = useMemo(() => {
     if (!hoverZoneId) return null;
     const z = zoneById.get(hoverZoneId);
@@ -106,7 +108,6 @@ export default function MapPage() {
 
   function onPickCompany(id: string | null) {
     setActiveCompanyId(id);
-    // не сбрасываем activeZone, чтобы можно было сравнивать
   }
 
   function onPickZone(id: string) {
@@ -128,24 +129,35 @@ export default function MapPage() {
         />
 
         <div className="panel">
-          <div className="panel__title">Фильтр по району</div>
+          <div className="panel__title">Фильтр по зоне</div>
+
           <select
             className="select"
             value={districtFilterId ?? ''}
             onChange={(e) => setDistrictFilterId(e.target.value ? e.target.value : null)}
           >
-            <option value="">— все районы —</option>
-            {districts.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name} ({d.id})
+            <option value="">— все зоны —</option>
+            {filterZones.map((z) => (
+              <option key={z.id} value={z.id}>
+                {z.name} ({z.id})
               </option>
             ))}
           </select>
+
           {districtFilterId ? (
-            <button className="btn btn--ghost" type="button" style={{ marginTop: 8 }} onClick={() => setDistrictFilterId(null)}>
+            <button
+              className="btn btn--ghost"
+              type="button"
+              style={{ marginTop: 8 }}
+              onClick={() => setDistrictFilterId(null)}
+            >
               Сбросить фильтр
             </button>
           ) : null}
+
+          <div className="muted" style={{ marginTop: 8 }}>
+            Всего зон: {filterZones.length}
+          </div>
         </div>
 
         <Legend />
