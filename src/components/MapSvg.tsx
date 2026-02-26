@@ -15,7 +15,6 @@ type Props = {
 type TooltipState = { visible: boolean; x: number; y: number; zoneId: string | null };
 
 function sortZoneIds(ids: string[]) {
-  // mo_001.. -> по числу; остальное — как есть
   return [...ids].sort((a, b) => {
     const am = a.match(/_(\d+)/);
     const bm = b.match(/_(\d+)/);
@@ -38,12 +37,7 @@ export default function MapSvg({
   const [svgText, setSvgText] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
-  const zoneById = useMemo(() => {
-    const m = new Map<string, Zone>();
-    zones.forEach((z) => m.set(z.id, z));
-    return m;
-  }, [zones]);
-
+  const zoneById = useMemo(() => new Map(zones.map((z) => [z.id, z])), [zones]);
   const zoneIdsSorted = useMemo(() => sortZoneIds(zones.map((z) => z.id)), [zones]);
 
   const [tooltip, setTooltip] = useState<TooltipState>({
@@ -81,17 +75,18 @@ export default function MapSvg({
     };
   }, [onSvgLoaded]);
 
-  // 2) Event delegation
+  // 2) Event delegation (ВАЖНО: работаем с Element, потому что SVG != HTMLElement)
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
-    function findZoneTarget(target: EventTarget | null): HTMLElement | null {
-      if (!(target instanceof HTMLElement)) return null;
-      return (target.closest?.('[data-zone-id],[id]') as HTMLElement | null) ?? null;
+    function findZoneTarget(target: EventTarget | null): Element | null {
+      if (!(target instanceof Element)) return null;
+      // берём ближайший элемент с data-zone-id или id
+      return target.closest('[data-zone-id],[id]');
     }
 
-    function getZoneId(zoneEl: HTMLElement | null): string | null {
+    function getZoneId(zoneEl: Element | null): string | null {
       if (!zoneEl) return null;
       return zoneEl.getAttribute('data-zone-id') || zoneEl.getAttribute('id');
     }
@@ -132,28 +127,28 @@ export default function MapSvg({
     };
   }, [onHoverZone, onPickZone]);
 
-  // 3) Apply styles + auto-assign zone ids if SVG has none
+  // 3) Apply styles + auto-assign ids if SVG has none
   useEffect(() => {
     const root = containerRef.current;
     if (!root) return;
 
-    const shapes = Array.from(root.querySelectorAll<HTMLElement>('svg path, svg polygon'));
+    const shapes = Array.from(root.querySelectorAll<SVGElement>('svg path, svg polygon'));
 
-    // проверим: есть ли вообще хоть один id/data-zone-id у фигур
+    // если в SVG нет id/data-zone-id, но количество фигур совпадает с zones.json — проставим автоматически
     const hasAnyIds = shapes.some((n) => n.getAttribute('data-zone-id') || n.getAttribute('id'));
-
-    // если ids нет, но количество фигур совпадает с количеством зон — проставим data-zone-id по порядку
     if (!hasAnyIds && shapes.length === zoneIdsSorted.length) {
-      shapes.forEach((n, idx) => {
-        n.setAttribute('data-zone-id', zoneIdsSorted[idx]);
-      });
+      shapes.forEach((n, idx) => n.setAttribute('data-zone-id', zoneIdsSorted[idx]));
     }
 
-    // теперь применяем стили/состояния
     shapes.forEach((n) => {
+      // снимаем inline-стили экспорта
       n.removeAttribute('fill');
       n.removeAttribute('stroke');
       n.removeAttribute('style');
+
+      // чтобы клики точно работали по SVG
+      n.style.pointerEvents = 'all';
+
       n.classList.add('zone');
 
       const zoneId = n.getAttribute('data-zone-id') || n.getAttribute('id') || '';
