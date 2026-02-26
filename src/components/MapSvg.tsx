@@ -6,7 +6,7 @@ type Props = {
   coveredZoneIds: Set<string>;
   activeZoneId: string | null;
   hoverZoneId: string | null;
-  districtFilterId: string | null;
+  districtFilterId: string | null; // теперь это "selectedZoneId"
   onHoverZone: (zoneId: string | null) => void;
   onPickZone: (zoneId: string) => void;
   onSvgLoaded?: () => void;
@@ -83,6 +83,7 @@ export default function MapSvg({
     if (!root) return;
 
     const shapes = Array.from(root.querySelectorAll<SVGElement>('svg path, svg polygon'));
+
     shapes.forEach((n) => {
       n.removeAttribute('fill');
       n.removeAttribute('stroke');
@@ -93,17 +94,22 @@ export default function MapSvg({
       const zoneId = n.getAttribute('data-zone-id') || n.getAttribute('id') || '';
       if (!zoneId) return;
 
-      const z = zoneById.get(zoneId);
-      const hidden =
-        Boolean(districtFilterId) &&
-        Boolean(z) &&
-        ((z!.type === 'district' && z!.id !== districtFilterId) ||
-          (z!.type === 'mo' && z!.parentDistrictId !== districtFilterId));
+      // Приглушение всех зон кроме выбранной (если фильтр включён)
+      const isDimmed = Boolean(districtFilterId) && zoneId !== districtFilterId;
 
-      n.classList.toggle('is-hidden', hidden);
+      // Сбрасываем/ставим инлайн-опацити (чтобы не лезть в CSS)
+      n.style.opacity = isDimmed ? '0.12' : '1';
+
+      // Твои состояния подсветки
       n.classList.toggle('is-covered', coveredZoneIds.has(zoneId));
       n.classList.toggle('is-active', activeZoneId === zoneId);
       n.classList.toggle('is-hovered', hoverZoneId === zoneId);
+
+      // Если хочешь, чтобы по приглушенным было тяжело кликать, раскомментируй:
+      // n.style.pointerEvents = isDimmed ? 'none' : 'all';
+
+      // zoneById пока оставляем, вдруг понадобится дальше
+      void zoneById;
     });
 
     const svg = root.querySelector('svg') as SVGElement | null;
