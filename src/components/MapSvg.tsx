@@ -14,9 +14,6 @@ type Props = {
 
 type TooltipState = { visible: boolean; x: number; y: number; zoneId: string | null };
 
-// ВАЖНО: относительный путь (без ведущего "/"), чтобы работало на GitHub Pages в /<repo>/
-const MAP_SVG_PATH = 'map/spb.svg';
-
 export default function MapSvg({
   zones,
   coveredZoneIds,
@@ -49,8 +46,9 @@ export default function MapSvg({
     let cancelled = false;
     setError(null);
 
-    // cache bust на всякий случай (иногда Pages/браузер кешируют)
-    const url = `${MAP_SVG_PATH}?v=${Date.now()}`;
+    // BASE_URL = "/" локально, и "/<repo>/" на GitHub Pages
+    const base = import.meta.env.BASE_URL;
+    const url = `${base}map/spb.svg?v=${Date.now()}`; // cache-bust
 
     fetch(url)
       .then(async (r) => {
@@ -104,7 +102,6 @@ export default function MapSvg({
       const zoneEl = findZoneTarget(e.target);
       const zoneId = zoneEl?.getAttribute('data-zone-id');
       if (!zoneId) return;
-
       onPickZone(zoneId);
     }
 
