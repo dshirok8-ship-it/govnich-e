@@ -41,13 +41,13 @@ export default function MapSvg({
     zoneId: null
   });
 
-  // 1) Load SVG as text
+  // 1) Load SVG
   useEffect(() => {
     let cancelled = false;
     setError(null);
 
-    const base = import.meta.env.BASE_URL; // "/" локально, "/<repo>/" на Pages
-    const url = `${base}map/spb.svg?v=${Date.now()}`; // cache-bust
+    const base = import.meta.env.BASE_URL;
+    const url = `${base}map/spb.svg?v=${Date.now()}`;
 
     fetch(url)
       .then(async (r) => {
@@ -69,14 +69,13 @@ export default function MapSvg({
     };
   }, [onSvgLoaded]);
 
-  // 2) Event delegation on container
+  // 2) Event delegation (кликаем только по элементам, у которых есть id или data-zone-id)
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
     function findZoneTarget(target: EventTarget | null): HTMLElement | null {
       if (!(target instanceof HTMLElement)) return null;
-      // поддерживаем и data-zone-id, и id (mapshaper обычно пишет id)
       return (target.closest?.('[data-zone-id],[id]') as HTMLElement | null) ?? null;
     }
 
@@ -121,19 +120,26 @@ export default function MapSvg({
     };
   }, [onHoverZone, onPickZone]);
 
-  // 3) Apply classes to zones after render (based on state)
+  // 3) Apply styles to ALL shapes, not only those with ids
   useEffect(() => {
     const root = containerRef.current;
     if (!root) return;
 
-    const nodes = root.querySelectorAll<HTMLElement>('[data-zone-id],[id]');
-    nodes.forEach((n) => {
-      const zoneId = n.getAttribute('data-zone-id') || n.getAttribute('id') || '';
+    // Берём ВСЕ реальные полигоны карты (mapshaper обычно делает path)
+    const shapes = root.querySelectorAll<HTMLElement>('svg path, svg polygon');
 
-      // ШАГ 1: сносим inline-стили, которые делают карту чёрной и ломают CSS подсветку
+    shapes.forEach((n) => {
+      // Убираем всё, что mapshaper прописал inline
       n.removeAttribute('fill');
       n.removeAttribute('stroke');
       n.removeAttribute('style');
+
+      // Красим как "зону" всегда, чтобы не было чёрной кляксы
+      n.classList.add('zone');
+
+      // А вот интерактивные состояния применяем только если есть понятный id
+      const zoneId = n.getAttribute('data-zone-id') || n.getAttribute('id') || '';
+      if (!zoneId) return;
 
       const z = zoneById.get(zoneId);
       const hidden =
@@ -143,8 +149,6 @@ export default function MapSvg({
           (z!.type === 'mo' && z!.parentDistrictId !== districtFilterId));
 
       n.classList.toggle('is-hidden', hidden);
-
-      n.classList.add('zone');
       n.classList.toggle('is-covered', coveredZoneIds.has(zoneId));
       n.classList.toggle('is-active', activeZoneId === zoneId);
       n.classList.toggle('is-hovered', hoverZoneId === zoneId);
