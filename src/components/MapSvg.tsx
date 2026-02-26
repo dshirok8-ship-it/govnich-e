@@ -243,13 +243,14 @@ export default function MapSvg({
         onClick={onClick}
         onWheel={onWheel}
         onDoubleClick={onDoubleClick}
-      >
-        <div
-          ref={innerRef}
-          className="svgInner"
-          style={{ transform: `translate(${tx}px, ${ty}px) scale(${scale})` }}
-          dangerouslySetInnerHTML={{ __html: svgText }}
-        />
+<div
+  ref={innerRef}
+  className="svgInner"
+  style={{
+    transform: `translate(${Math.round(tx)}px, ${Math.round(ty)}px) scale(${scale})`
+  }}
+  dangerouslySetInnerHTML={{ __html: svgText }}
+/>
       </div>
 
       {/* Zoom controls */}
@@ -275,3 +276,4 @@ export default function MapSvg({
     </div>
   );
 }
+
